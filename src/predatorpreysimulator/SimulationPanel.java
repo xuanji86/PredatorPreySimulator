@@ -6,7 +6,6 @@
 package predatorpreysimulator;
 
 import java.awt.event.ActionEvent;
-import predatorpreysimulator.PredatorPreySimulator;
 
 /**
  *

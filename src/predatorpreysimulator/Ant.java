@@ -6,8 +6,6 @@
 package predatorpreysimulator;
 
 import java.awt.Point;
-import predatorpreysimulator.CellPanel;
-import predatorpreysimulator.InitPanel;
 
 public class Ant
         extends Organism {

@@ -4,8 +4,11 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/xuanji/Documents/NetBeansProjects/PredatorPreySimulator/src/predatorpreysimulator/PredatorPreySimulator.java</file>
+            <file>file:/C:/Users/xuanji/Documents/NetBeansProjects/PredatorPreySimulator/src/predatorpreysimulator/Doodlebug.java</file>
             <file>file:/C:/Users/xuanji/Documents/NetBeansProjects/PredatorPreySimulator/src/predatorpreysimulator/SimulationPanel.java</file>
             <file>file:/C:/Users/xuanji/Documents/NetBeansProjects/PredatorPreySimulator/src/predatorpreysimulator/InitPanel.java</file>
+            <file>file:/C:/Users/xuanji/Documents/NetBeansProjects/PredatorPreySimulator/src/predatorpreysimulator/Organism.java</file>
+            <file>file:/C:/Users/xuanji/Documents/NetBeansProjects/PredatorPreySimulator/src/predatorpreysimulator/Ant.java</file>
             <file>file:/C:/Users/xuanji/Documents/NetBeansProjects/PredatorPreySimulator/src/predatorpreysimulator/CellPanel.java</file>
             <file>file:/C:/Users/xuanji/Documents/NetBeansProjects/PredatorPreySimulator/src/predatorpreysimulator/SimulationFrame.java</file>
         </group>

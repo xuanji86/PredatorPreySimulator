@@ -6,8 +6,6 @@
 package predatorpreysimulator;
 
 import java.awt.Point;
-import predatorpreysimulator.InitPanel;
-import predatorpreysimulator.CellPanel;
 
 public class Doodlebug
         extends Organism {

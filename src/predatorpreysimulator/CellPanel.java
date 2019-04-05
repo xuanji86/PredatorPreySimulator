@@ -5,12 +5,8 @@
  */
 package predatorpreysimulator;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 /**
  *
@@ -39,14 +35,7 @@ public class CellPanel extends javax.swing.JPanel {
         }
     }
 
-    public void setType(String type) {
-        this.type = type;
-        if (type.equalsIgnoreCase("doodlebugs")) {
-            this.iconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/bug.png")));
-        } else {
-            this.iconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/ant.png")));
-        }
-    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.

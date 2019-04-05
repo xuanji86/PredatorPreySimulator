@@ -6,8 +6,6 @@
 
 package predatorpreysimulator;
 
-import java.awt.BorderLayout;
-
 
 /**
  *
