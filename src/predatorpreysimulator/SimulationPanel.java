@@ -46,7 +46,7 @@ public class SimulationPanel extends javax.swing.JPanel {
 
     void setLabels() {
         this.timeStepLabel.setText("Time step: " + this.sim.timeStep);
-        this.timeStepLabel.setText("Number of ants: " + this.sim.numOfAnts);
+        this.antsLabel.setText("Number of ants: " + this.sim.numOfAnts);
         this.bugsLabel.setText("Number of bugs: " + this.sim.numOfBugs);
     }
 
