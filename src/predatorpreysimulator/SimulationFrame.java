@@ -20,8 +20,8 @@ public class SimulationFrame extends javax.swing.JFrame {
      */
     public SimulationFrame() {
         initComponents();
-        panel.setLayout(new BorderLayout());
-        panel.add(new InitPanel(this),BorderLayout.CENTER);
+        this.panel.setLayout(new java.awt.BorderLayout());
+        this.panel.add(new InitPanel(this),"Center");
         
         
         
@@ -98,9 +98,9 @@ public class SimulationFrame extends javax.swing.JFrame {
     private javax.swing.JPanel panel;
     // End of variables declaration//GEN-END:variables
 
-    void startSimulation(int i, int i0, int i1, int i2) {
-        panel.removeAll();
-        panel.add(new SimulationPanel(i,i0,i1,i2,this),BorderLayout.CENTER);
+    void startSimulation(int row, int col, int ants, int bugs) {
+        this.panel.removeAll();
+        this.panel.add(new SimulationPanel(new PredatorPreySimulator(row, col,ants,bugs), this), "Center");
         pack();
         
         

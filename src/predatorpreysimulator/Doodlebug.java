@@ -5,117 +5,47 @@
  */
 package predatorpreysimulator;
 
-import java.util.Random;
+import java.awt.Point;
+import predatorpreysimulator.InitPanel;
+import predatorpreysimulator.CellPanel;
 
-/**
- *
- * @author Honigmaster
- */
-public class Doodlebug extends Organism{
-    int eatCount = 0;
-    
-    public Doodlebug(PredatorPreySimulator sim, int posX, int posY, int lastTimeStep){
-        super(sim, posX, posY, lastTimeStep);
+public class Doodlebug
+        extends Organism {
+
+    int lastAte = -1;
+
+    public Doodlebug(PredatorPreySimulator sim, Point position, int lastTimeStep) {
+        super(sim, position, lastTimeStep);
+        this.lastAte = (sim.timeStep - 1);
     }
-    
-    public Point getNextPoint(){
-        Point leftSpace = new Point(posX - 1, posY);
-        Point rightSpace = new Point(posX + 1, posY);
-        Point upSpace = new Point(posX, posY + 1);
-        Point downSpace = new Point(posX, posY - 1);
-        Random rand = new Random();
-        
-        
-        boolean open = false;
-        while(open == false){
-            int randSpace = rand.nextInt(4);
-            if (randSpace == 0){
-                if(!(sim.organismTable[posY][posX - 1] instanceof Ant) && leftSpace.inGrid() == true){
-                    open = true;
-                    Point nextPos = new Point(posX - 1, posY); 
-                    eatCount += 1;
-                    break;
-                }
-            }
-            else if (randSpace == 1){
-                if(!(sim.organismTable[posY][posX + 1] instanceof Ant) && rightSpace.inGrid() == true){
-                    open = true;
-                    Point nextPos = new Point(posX + 1, posY);  
-                    eatCount += 1;
-                    break;
-                }
-            }
-            else if (randSpace == 2){
-                if(!(sim.organismTable[posY + 1][posX] instanceof Ant) && upSpace.inGrid() == true){
-                    open = true;
-                    Point nextPos = new Point(posX, posY + 1);
-                    eatCount += 1;
-                    break;
-                }
-            }
-            else if (randSpace == 3){
-                if(!(sim.organismTable[posY - 1][posX] instanceof Ant) && downSpace.inGrid() == true){
-                    open = true;
-                    Point nextPos = new Point(posX, posY - 1);
-                    eatCount += 1;
-                    break;
-                }
-            }
-            else{
-                if (randSpace == 0){
-                    if(!(sim.organismTable[posY][posX - 1] instanceof Doodlebug) && leftSpace.inGrid() == true){
-                        open = true;
-                        Point nextPos = new Point(posX - 1, posY); 
-                        eatCount += 1;
-                        break;
-                    }
-                }
-                else if (randSpace == 1){
-                    if(!(sim.organismTable[posY][posX + 1] instanceof Doodlebug) && rightSpace.inGrid() == true){
-                        open = true;
-                        Point nextPos = new Point(posX + 1, posY);  
-                        eatCount += 1;
-                        break;
-                    }
-                }
-                else if (randSpace == 2){
-                    if(!(sim.organismTable[posY + 1][posX] instanceof Doodlebug) && upSpace.inGrid() == true){
-                        open = true;
-                        Point nextPos = new Point(posX, posY + 1);
-                        eatCount += 1;
-                        break;
-                    }
-                }
-                else if (randSpace == 3){
-                    if(!(sim.organismTable[posY - 1][posX] instanceof Doodlebug) && downSpace.inGrid() == true){
-                        open = true;
-                        Point nextPos = new Point(posX, posY - 1);
-                        eatCount += 1;
-                        break;
-                    }
-                }else
-                open = true;
-                Point curPoint = new Point(posX, posY);
-                return curPoint;
-            }
-                    
+
+    void move() {
+        Point newPos = findACell("toEat");
+        if (newPos == null) {
+            newPos = getEmptyCellToMove();
+        } else {
+            this.lastAte = this.sim.timeStep;
+            this.sim.numOfAnts -= 1;
+            this.sim.grid[newPos.x][newPos.y].setBackground(InitPanel.antEatenColor);
         }
-        return nextPos;
-    }        
-    
-    
-    public void breed(){
-        if ((sim.timeStep - lastTimeStep) % 8 && eatCount < 1){
-            Point breedPoint = getNextPoint();
-            if (breedPoint.getX() != posX && breedPoint.getY() != posY){
-                Doodlebug newBug = new Doodlebug(sim, breedPoint.getX(), breedPoint.getY(), -1);
-            }            
+        super.move(newPos);
+    }
+
+    void breed() {
+        Point newPos = findACell("toBreed");
+        if ((this.sim.timeStep - this.lastBreed == 8) && (newPos != null)) {
+            super.breed(newPos, new Doodlebug(this.sim, newPos, this.sim.timeStep));
+            this.sim.numOfBugs += 1;
+            this.sim.grid[newPos.x][newPos.y].setBackground(InitPanel.doodleBugBreedsColor);
         }
     }
-    
-    public void starve(){
-        if ((sim.timeStep - lastTimeStep) % 8 == 0 && eatCount > 0){
-            sim.organismTable[posY][posX] = null;   
+
+    void starve() {
+        if (this.sim.timeStep - this.lastAte == 3) {
+            this.sim.organismTable[this.posX][this.posY] = null;
+            this.sim.grid[this.posX][this.posY].setIcon(null);
+            this.sim.numOfBugs -= 1;
+            this.sim.grid[this.posX][this.posY].setBackground(InitPanel.doodleBugDiesColor);
         }
     }
 }

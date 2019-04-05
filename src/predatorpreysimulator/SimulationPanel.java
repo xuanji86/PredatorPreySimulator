@@ -5,43 +5,49 @@
  */
 package predatorpreysimulator;
 
-import java.awt.Color;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import predatorpreysimulator.PredatorPreySimulator;
 
 /**
  *
  * @author Sikder Huq
  */
 public class SimulationPanel extends javax.swing.JPanel {
+
     CellPanel[][] grid;
     SimulationFrame simFrame;
+    PredatorPreySimulator sim;
+    private javax.swing.JSplitPane splitPane;
     int numOfRows, numOfCols, numOfDoodlebugs, numOfAnts;
+
     /**
      * Creates new form SimulationPanel
      */
-    public SimulationPanel(int row, int col, int doodlebugs, int ants, SimulationFrame sf) {
+    public SimulationPanel(PredatorPreySimulator sim, SimulationFrame sFrame) {
         initComponents();
-        simFrame=sf;
+        this.simFrame = sFrame;
+        //this.splitPane.setDividerLocation(280);
         setVisible(true);
-        numOfRows = row;
-        numOfCols = col;
-        simPanel.setLayout(new GridLayout(numOfRows, numOfCols, 0, 0));
-        grid = new CellPanel[numOfRows][numOfCols];
-        for (int i = 0; i < numOfRows; i++) {
-            for (int j = 0; j < numOfCols; j++) {
-                grid[i][j] = new CellPanel();
-                simPanel.add(grid[i][j]);
+
+        this.sim = sim;
+        this.grid = new CellPanel[sim.numOfRows][sim.numOfCols];
+        for (int i = 0; i < sim.numOfRows; i++) {
+            for (int j = 0; j < sim.numOfCols; j++) {
+                this.grid[i][j] = new CellPanel();
+                this.simPanel.add(this.grid[i][j]);
             }
         }
+        this.simPanel.setLayout(new java.awt.GridLayout(sim.numOfRows, sim.numOfCols, 0, 0));
+        sim.setGrid(this.grid);
+        sim.initWorld();
 
-        grid[(int)(Math.random()*numOfRows)][(int)(Math.random()*numOfCols)].setType("doodlebugs");
-        grid[(int)(Math.random()*numOfRows)][(int)(Math.random()*numOfCols)].setType("ants");
-        grid[(int)(Math.random()*numOfRows)][(int)(Math.random()*numOfCols)].setType("ants");
-        grid[(int)(Math.random()*numOfRows)][(int)(Math.random()*numOfCols)].setType("doodlebugs");
-        grid[(int)(Math.random()*numOfRows)][(int)(Math.random()*numOfCols)].setType("ants");
-        
+        setLabels();
+    }
+
+    void setLabels() {
+        this.timeStepLabel.setText("Time step: " + this.sim.timeStep);
+        this.timeStepLabel.setText("Number of ants: " + this.sim.numOfAnts);
+        this.bugsLabel.setText("Number of bugs: " + this.sim.numOfBugs);
     }
 
     /**
@@ -55,47 +61,21 @@ public class SimulationPanel extends javax.swing.JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         simPanel = new javax.swing.JPanel();
-        NextButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        timeStepLabel = new javax.swing.JLabel();
+        antsLabel = new javax.swing.JLabel();
+        bugsLabel = new javax.swing.JLabel();
+        NextButton = new javax.swing.JButton();
 
         simPanel.setLayout(null);
         jScrollPane1.setViewportView(simPanel);
 
-        NextButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/next.png"))); // NOI18N
-        NextButton.setText("Next step");
-        NextButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                NextButtonActionPerformed(evt);
-            }
-        });
+        timeStepLabel.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        timeStepLabel.setForeground(new java.awt.Color(0, 102, 255));
 
-        jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 102, 255));
-        jLabel1.setText("Time Step:");
+        antsLabel.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
 
-        jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        jLabel2.setText("Number of Ants:");
-
-        jLabel3.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        jLabel3.setText("Number of Bugs:");
-
-        jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 102, 255));
-        jLabel4.setText("0");
-
-        jLabel5.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel5.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        jLabel5.setText("0");
-
-        jLabel6.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel6.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        jLabel6.setText("0");
+        bugsLabel.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -103,50 +83,46 @@ public class SimulationPanel extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(antsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(timeStepLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
+                    .addComponent(bugsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(timeStepLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(antsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(bugsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33))
         );
+
+        NextButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/next.png"))); // NOI18N
+        NextButton.setText("Next Step");
+        NextButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NextButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(NextButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 703, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(NextButton, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 691, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -154,39 +130,38 @@ public class SimulationPanel extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(NextButton, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(358, Short.MAX_VALUE))
+                .addGap(27, 27, 27)
+                .addComponent(NextButton)
+                .addContainerGap(353, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void NextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NextButtonActionPerformed
-        // TODO add your handling code here:
-        final int row = (int)(Math.random()*numOfRows); 
-        final int col = (int)(Math.random()*numOfCols); 
-        grid[row][col].setBackground(InitPanel.gridBgColor);     
-        //the following code implemets a timer
-        javax.swing.Timer t = new javax.swing.Timer(500, new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                grid[row][col].setBackground(InitPanel.gridBgColor);             
-                
-            }
-        });
-        t.setRepeats(false);
-        t.start();
+        this.sim.goNext();
+        setLabels();
+        for (int i = 0; i < this.sim.numOfRows; i++) {
+            for (int j = 0; j < this.sim.numOfCols; j++) {
+                final int row = i;
+                final int col = j;
+
+                javax.swing.Timer t = new javax.swing.Timer(500, new java.awt.event.ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        SimulationPanel.this.grid[row][col].setBackground(InitPanel.gridBgColor);
+                    }
+
+                });
+                t.setRepeats(false);
+                t.start();
     }//GEN-LAST:event_NextButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton NextButton;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel antsLabel;
+    private javax.swing.JLabel bugsLabel;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel simPanel;
+    private javax.swing.JLabel timeStepLabel;
     // End of variables declaration//GEN-END:variables
 }

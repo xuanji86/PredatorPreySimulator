@@ -3,34 +3,50 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package predatorpreysimulator;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 /**
  *
  * @author Sikder Huq
  */
 public class CellPanel extends javax.swing.JPanel {
+
     String type;
-    /**
-     * Creates new form CellPanel
-     */
+
     public CellPanel() {
-        initComponents();       
+        initComponents();
         setBackground(InitPanel.gridBgColor);
+        this.iconLabel.setBorder(BorderFactory.createLineBorder(InitPanel.gridBorderColor));
     }
-    
-    public void setType(String type){
+
+    public void setIcon(Organism critter) {
+        try {
+            if ((critter instanceof Doodlebug)) {
+                this.iconLabel.setIcon(new ImageIcon(getClass().getResource("/icons/bug.png")));
+            } else if ((critter instanceof Ant)) {
+                this.iconLabel.setIcon(new ImageIcon(getClass().getResource("/icons/Ant.png")));
+            } else {
+                this.iconLabel.setIcon(null);
+            }
+        } catch (Exception localException) {
+        }
+    }
+
+    public void setType(String type) {
         this.type = type;
-        if (type.equalsIgnoreCase("doodlebugs"))
-            iconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/bug.png")));
-        else
-            iconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/ant.png")));
+        if (type.equalsIgnoreCase("doodlebugs")) {
+            this.iconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/bug.png")));
+        } else {
+            this.iconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/ant.png")));
+        }
     }
-    
-   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -54,4 +70,5 @@ public class CellPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel iconLabel;
     // End of variables declaration//GEN-END:variables
+
 }

@@ -480,9 +480,9 @@ public class InitPanel extends javax.swing.JPanel {
         setVisible(false);
         int row = Integer.parseInt(rowComboBox.getSelectedItem().toString());
         int col = Integer.parseInt(colComboBox.getSelectedItem().toString());
-        //int doodle = Integer.parseInt(doodlebugsTField.getText().toString());
-        //int ants = Integer.parseInt(antsTField.getText().toString());
-        simFrame.startSimulation(row,col,0,0);
+        int doodle = Integer.parseInt(doodlebugsTField.getText().toString());
+        int ants = Integer.parseInt(antsTField.getText().toString());
+        simFrame.startSimulation(row,col,ants,doodle);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void rowComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rowComboBoxActionPerformed

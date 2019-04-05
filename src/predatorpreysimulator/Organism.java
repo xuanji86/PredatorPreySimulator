@@ -9,125 +9,85 @@ package predatorpreysimulator;
  *
  * @author Honigmaster
  */
-
-import java.util.Random;
+import java.awt.Point;
 
 public class Organism {
+
     int posX, posY;
     int lastTimeStep;
     PredatorPreySimulator sim;
-    
-    public Organism(PredatorPreySimulator sim, int posX, int posY, int lastTimeStep){
+    int lastBreed;
+
+    public Organism(PredatorPreySimulator sim, Point position, int lastTimeStep) {
         this.sim = sim;
-        this.posX = posX;
-        this.posY = posY;
+        this.posX = position.x;
+        this.posY = position.y;
         this.lastTimeStep = lastTimeStep;
-        
+        sim.organismTable[this.posX][this.posY] = this;
+        sim.grid[this.posX][this.posY].setIcon(this);
+        this.lastBreed = sim.timeStep;
     }
-    
-    public class Point{
-        int x;
-        int y;
-        
-        public Point(int x, int y){
-            this.x = x;
-            this.y = y;
-        }
-        
-        public int getX(){
-            return x;
-        }
-        
-        public int getY(){
-            return y;
-        }
-        
-    public boolean inGrid(){
-        boolean answer = true; 
-        if (x > sim.organismTable[0].legnth() || x < 0 || y > sim.organismTable.length() || y < 0){
-            answer = false;
-        }
-        return answer;
-    }
-        
-    }
-    
-    public void move(){
-        Point nextPoint = getNextPoint();
-        sim.organismTable[posY][posX] = this;
-        this.posX = nextPoint.getX();
-        this.posY = nextPoint.getY();
-    }
-    
-    public Point getNextPoint(){
-        Point leftSpace = new Point(posX - 1, posY);
-        Point rightSpace = new Point(posX + 1, posY);
-        Point upSpace = new Point(posX, posY + 1);
-        Point downSpace = new Point(posX, posY - 1);
-        Random rand = new Random();
-        
-        
-        boolean open = false;
-        while(open == false){
-            int randSpace = rand.nextInt(4);
-            if (randSpace == 0){
-                if(!(sim.organismTable[posY][posX - 1] instanceof Organism) || leftSpace.inGrid() == false ){
-                    open = true;
-                    Point nextPos = new Point(posX - 1, posY); 
-                    break;
-                }
-            }
-            if (randSpace == 1){
-                if(!(sim.organismTable[posY][posX + 1] instanceof Organism) || rightSpace.inGrid() == false){
-                    open = true;
-                    Point nextPos = new Point(posX + 1, posY);                    
-                    break;
-                }
-            }
-            if (randSpace == 2){
-                if(!(sim.organismTable[posY + 1][posX] instanceof Organism) || upSpace.inGrid() == false){
-                    open = true;
-                    Point nextPos = new Point(posX, posY + 1);
-                    break;
-                }
-            }
-            if (randSpace == 3){
-                if(!(sim.organismTable[posY - 1][posX] instanceof Organism) || downSpace.inGrid() == false){
-                    open = true;
-                    Point nextPos = new Point(posX, posY - 1);
-                    break;
-                }
-            }
-            else{
-                open = true;
-                Point curPoint = new Point(posX, posY);
-                return curPoint;
-            }
-                    
-        }
-        return nextPos;
-    }
-    
 
-    
-    public void breed(){
-        if ((sim.timeStep - lastTimeStep) % 3 == 0){
-            Point breedPoint = getNextPoint();
-            if (breedPoint.getX() != posX && breedPoint.getY() != posY){
-                Organism newBug = new Organism(sim, breedPoint.getX(), breedPoint.getY(), -1);
-            }
+    void move(Point newPos) {
+        if (newPos != null) {
+            this.sim.organismTable[this.posX][this.posY] = null;
+            this.sim.grid[this.posX][this.posY].setIcon(null);
+            this.posX = newPos.x;
+            this.posY = newPos.y;
+            this.sim.organismTable[this.posX][this.posY] = this;
+            this.sim.grid[this.posX][this.posY].setIcon(this);
+
         }
     }
 
-    public int getPosX(){
-        return posX;
+    void breed(Point newPos, Organism newOrganism) {
+        this.sim.organismTable[newPos.x][newPos.y] = newOrganism;
+        this.sim.grid[newPos.x][newPos.y].setIcon(this);
+        this.lastBreed = this.sim.timeStep;
     }
-    
-    public int getPosY(){
-        return posY;
+
+    protected Point getEmptyCellToMove() {
+        int rN = (int) (Math.random() * 4.0D);
+        int[][] shift = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
+        Point newPos = new Point(this.posX + shift[rN][0], this.posY + shift[rN][1]);
+        if ((!isInGrid(newPos)) || (this.sim.organismTable[newPos.x][newPos.y] != null)) {
+            return null;
+        }
+        return newPos;
     }
-    
-    public int getLastTimeStop(){
-        return lastTimeStep;
+
+    protected Point findACell(String toBreedOrEat) {
+        int[][] shift = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
+        int[] array = {0, 1, 2, 3};
+
+        for (int i = 0; i < 4; i++) {
+            int ran = i + (int) (Math.random() * (4 - i));
+
+            int temp = array[i];
+            array[i] = array[ran];
+            array[ran] = temp;
+
+            Point newPos = new Point(this.posX + shift[array[i]][0], this.posX + shift[array[i]][1]);
+            if (isInGrid(newPos)) {
+                if ((toBreedOrEat.equalsIgnoreCase("toBreed")) && (this.sim.organismTable[newPos.x][newPos.y] == null)) {
+                    return newPos;
+                }
+                if ((toBreedOrEat.equalsIgnoreCase("toEat")) && ((this.sim.organismTable[newPos.x][newPos.y] instanceof Ant))) {
+                    return newPos;
+                }
+            }
+        }
+        return null;
+    }
+
+    private boolean isInGrid(Point newPos) {
+        if ((newPos.x < 0) || (newPos.x >= this.sim.numOfRows) || (newPos.y < 0) || (newPos.y >= this.sim.numOfCols)) {
+            return false;
+        }
+        return true;
+    }
+
+    public void setTimeStep() {
+        this.lastTimeStep = this.sim.timeStep;
     }
 }
