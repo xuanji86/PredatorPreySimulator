@@ -152,8 +152,10 @@ public class SimulationPanel extends javax.swing.JPanel {
                 });
                 t.setRepeats(false);
                 t.start();
+            }
+        }
     }//GEN-LAST:event_NextButtonActionPerformed
-
+        
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton NextButton;
