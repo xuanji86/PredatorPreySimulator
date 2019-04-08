@@ -1,4 +1,4 @@
-    /*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -59,7 +59,6 @@ public class Organism {
     protected Point findACell(String toBreedOrEat) {
         int[][] shift = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
         int[] array = {0, 1, 2, 3};
-
         for (int i = 0; i < 4; i++) {
             int ran = i + (int) (Math.random() * (4 - i));
 
@@ -67,7 +66,7 @@ public class Organism {
             array[i] = array[ran];
             array[ran] = temp;
 
-            Point newPos = new Point(this.posX + shift[array[i]][0], this.posX + shift[array[i]][1]);
+            Point newPos = new Point(this.posX + shift[array[i]][0], this.posY + shift[array[i]][1]);
             if (isInGrid(newPos)) {
                 if ((toBreedOrEat.equalsIgnoreCase("toBreed")) && (this.sim.organismTable[newPos.x][newPos.y] == null)) {
                     return newPos;
